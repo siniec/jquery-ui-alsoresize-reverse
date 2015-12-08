@@ -1,12 +1,12 @@
-$.ui.plugin.add("resizable", "alsoResize", {
+$.ui.plugin.add("resizable", "alsoResizeReverse", {
 
 	start: function() {
 		var that = $(this).resizable( "instance" ),
 			o = that.options;
 
-		$(o.alsoResize).each(function() {
+		$(o.alsoResizeReverse).each(function() {
 			var el = $(this);
-			el.data("ui-resizable-alsoresize", {
+			el.data("ui-resizable-alsoresizeReverse", {
 				width: parseInt(el.width(), 10), height: parseInt(el.height(), 10),
 				left: parseInt(el.css("left"), 10), top: parseInt(el.css("top"), 10)
 			});
@@ -25,24 +25,24 @@ $.ui.plugin.add("resizable", "alsoResize", {
 				left: (that.position.left - op.left) || 0
 			};
 
-			$(o.alsoResize).each(function() {
-				var el = $(this), start = $(this).data("ui-resizable-alsoresize"), style = {},
-					css = el.parents(ui.originalElement[0]).length ?
-							[ "width", "height" ] :
-							[ "width", "height", "top", "left" ];
+		$(o.alsoResizeReverse).each(function() {
+			var el = $(this), start = $(this).data("ui-resizable-alsoresize-reverse"), style = {},
+				css = el.parents(ui.originalElement[0]).length ?
+					[ "width", "height" ] :
+					[ "width", "height", "top", "left" ];
 
-				$.each(css, function(i, prop) {
-					var sum = (start[prop] || 0) + (delta[prop] || 0);
-					if (sum && sum >= 0) {
-						style[prop] = sum || null;
-					}
-				});
-
-				el.css(style);
+			$.each(css, function(i, prop) {
+				var sum = (start[prop] || 0) - (delta[prop] || 0);
+				if (sum && sum >= 0) {
+					style[prop] = sum || null;
+				}
 			});
+
+			el.css(style);
+		});
 	},
 
 	stop: function() {
-		$(this).removeData("resizable-alsoresize");
+		$(this).removeData("resizable-alsoresize-reverse");
 	}
 });
